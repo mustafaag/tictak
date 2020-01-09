@@ -104,7 +104,7 @@ class Game extends React.Component {
     });
 
     let status;
-
+    console.log(winner);
    if(winner){
     if (winner.winner) {
       status = 'Winner: ' + winner.winnerSign;
@@ -163,6 +163,7 @@ function calculateWinner(squares) {
       retvar.winner= true;
       retvar.winnerSign = squares[a];
       retvar.indexes = [a, b, c];
+      return retvar;
     }
     if(checkIfAllComplete(squares)){
       retvar.winner=  false;
