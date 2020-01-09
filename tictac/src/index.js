@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 function Square(props) {
-  console.log(props);
   return (
     <button className={props.className} onClick={props.onClick}>
       {props.value}
@@ -14,7 +13,6 @@ function Square(props) {
 export default class Board extends React.Component {
   
   renderSquare(i, clasNm) {
-    console.log(this.props);
     if(this.props.winnerData.indexes){
       if(this.props.winnerData.indexes.indexOf(i) !== -1){
         clasNm = 'square test';
@@ -176,7 +174,6 @@ function calculateWinner(squares) {
 
 
 function checkIfAllComplete(squares){
-
   for(let i =0; i < squares.length; i++){
     if(squares[i] ===null){
       return false;
