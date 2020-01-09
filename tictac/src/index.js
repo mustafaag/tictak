@@ -92,10 +92,13 @@ class Game extends React.Component {
     });
 
     let status;
+
     if (winner) {
       status = 'Winner: ' + winner;
-    } else {
+    } else if(winner === null) {
       status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+    }else if(!winner){
+      status = 'It is a draw';
     }
 
     return (
@@ -137,8 +140,20 @@ function calculateWinner(squares) {
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return squares[a];
+      return true;
+    }
+    if(checkIfAllComplete(squares)){
+      return false;
     }
   }
   return null;
+}
+
+function checkIfAllComplete(squares){
+  for(let i =0; i < squares.length; i++){
+    if(squares[i] ===null){
+      return false;
+    }
+  }
+  return true;
 }
