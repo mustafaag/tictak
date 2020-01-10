@@ -12,10 +12,12 @@ function Square(props) {
 
 export default class Board extends React.Component {
   
-  renderSquare(i, clasNm) {
+  renderSquare(i, clasNm) { 
     if(this.props.winnerData.indexes){
-      if(this.props.winnerData.indexes.indexOf(i) !== -1){
+      if(this.props.winnerData.indexes.indexOf(i) !== -1 && this.props.winnerData.winner){
         clasNm = 'square test';
+      }else if(this.props.winnerData.indexes.indexOf(i) !== -1 && !this.props.winnerData.winner){
+        clasNm = 'square yellow';
       }
     }
     return (
@@ -104,7 +106,6 @@ class Game extends React.Component {
     });
 
     let status;
-    console.log(winner);
    if(winner){
     if (winner.winner) {
       status = 'Winner: ' + winner.winnerSign;
@@ -167,10 +168,10 @@ function calculateWinner(squares) {
     }
     if(checkIfAllComplete(squares)){
       retvar.winner=  false;
+      retvar.indexes=   [0, 1, 2, 3, 4, 5, 6, 7, 8];
     }
   }
   return retvar;
-
 }
 
 
