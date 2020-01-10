@@ -21,31 +21,29 @@ export default class Board extends React.Component {
       }
     }
     return (
-      <Square className={clasNm}
+      <Square key={i} className={clasNm}
         value={this.props.squares[i]}
         onClick={() => this.props.onClick(i)}
       />
     );
   }
+  renderBoard(){
+    let square= [];
+    for(let i = 0; i<3; i++){
+      let squareChildren = [];
+      for(let j = 0; j<3; j++){
+        squareChildren.push(this.renderSquare(j+(i*3), 'square'));
+      }
+      square.push(<div key={i} className="board-row">{squareChildren}</div>); 
+    }
+    return square;
+  }
 
   render() {
+   
     return (
       <div>
-        <div className="board-row">
-          {this.renderSquare(0, 'square')}
-          {this.renderSquare(1, 'square')}
-          {this.renderSquare(2, 'square')}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(3, 'square')}
-          {this.renderSquare(4, 'square')}
-          {this.renderSquare(5, 'square')}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(6, 'square')}
-          {this.renderSquare(7, 'square')}
-          {this.renderSquare(8, 'square')}
-        </div>
+       {this.renderBoard()}
       </div>
     );
   }
