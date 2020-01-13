@@ -56,3 +56,7 @@ body {
   .yellow {
     color: yellow;
   }
+  .bold-text{
+    font-weight: bolder;
+    color:red;
+  }

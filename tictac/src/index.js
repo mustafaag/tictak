@@ -27,6 +27,7 @@ export default class Board extends React.Component {
       />
     );
   }
+  
   renderBoard(){
     let square= [];
     for(let i = 0; i<3; i++){
@@ -98,14 +99,15 @@ class Game extends React.Component {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
-
+    
     let moves = history.map((step, move) => {
       const desc = move ?
         'Go to move #' + move :
         'Go to game start';
+      const boldClass = this.state.stepNumber === move ? 'bold-text': ' ';
       return (
-        <li key={move}>
-          <button onClick={() => this.jumpTo(move)}>{desc}</button>
+        <li key={move} className={boldClass}>
+          <button className={boldClass} onClick={() => this.jumpTo(move)}>{desc}</button>
         </li>
       );
     });
