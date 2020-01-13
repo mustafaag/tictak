@@ -12,7 +12,7 @@ function Square(props) {
 
 export default class Board extends React.Component {
   
-  renderSquare(i, clasNm) { 
+  renderSquare(i,iIndex,jIndex, clasNm) {
     if(this.props.winnerData.indexes){
       if(this.props.winnerData.indexes.indexOf(i) !== -1 && this.props.winnerData.winner){
         clasNm = 'square test';
@@ -23,7 +23,7 @@ export default class Board extends React.Component {
     return (
       <Square key={i} className={clasNm}
         value={this.props.squares[i]}
-        onClick={() => this.props.onClick(i)}
+        onClick={() => this.props.onClick(i,iIndex,jIndex)}
       />
     );
   }
@@ -33,7 +33,7 @@ export default class Board extends React.Component {
     for(let i = 0; i<3; i++){
       let squareChildren = [];
       for(let j = 0; j<3; j++){
-        squareChildren.push(this.renderSquare(j+(i*3), 'square'));
+        squareChildren.push(this.renderSquare(j+(i*3),i,j, 'square'));
       }
       square.push(<div key={i} className="board-row">{squareChildren}</div>); 
     }
@@ -63,11 +63,12 @@ class Game extends React.Component {
     };
   }
 
-  handleClick(i) {
+  handleClick(i,iIndex,jIndex) {
+    
     const history = this.state.history.slice(0, this.state.stepNumber+1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
-    
+    const squareIndexes = '('+(iIndex+1)+','+(jIndex+1) +')';
     if (calculateWinner(squares).winner !== null) {
       return;
     }
@@ -75,6 +76,7 @@ class Game extends React.Component {
     this.setState({
       history: history.concat([{
         squares: squares,
+        squareIndexes: squareIndexes
       }]),
       stepNumber: history.length,
       xIsNext: !this.state.xIsNext,
@@ -101,8 +103,9 @@ class Game extends React.Component {
     const winner = calculateWinner(current.squares);
     
     let moves = history.map((step, move) => {
+   
       const desc = move ?
-        'Go to move #' + move :
+        'Go to move #' + move + ' ' + step.squareIndexes :
         'Go to game start';
       const boldClass = this.state.stepNumber === move ? 'bold-text': ' ';
       return (
@@ -134,7 +137,7 @@ class Game extends React.Component {
           <Board
             winnerData= {winner}
             squares={current.squares} 
-            onClick={(i) => this.handleClick(i)}
+            onClick={(i,iIndex,jIndex) => this.handleClick(i,iIndex,jIndex)}
           />
 
         </div>
