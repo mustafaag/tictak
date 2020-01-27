@@ -43,7 +43,7 @@ export default class Board extends React.Component {
   render() {
    
     return (
-      <div>
+      <div className="game-board">
        {this.renderBoard()}
       </div>
     );
@@ -101,19 +101,12 @@ class Game extends React.Component {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
-    
-    let moves = history.map((step, move) => {
-   
-      const desc = move ?
-        'Go to move #' + move + ' ' + step.squareIndexes :
-        'Go to game start';
-      const boldClass = this.state.stepNumber === move ? 'bold-text': ' ';
-      return (
-        <li key={move} className={boldClass}>
-          <button className={boldClass} onClick={() => this.jumpTo(move)}>{desc}</button>
-        </li>
-      );
-    });
+  
+    const moves = (
+      <li >
+        <button  onClick={() => this.jumpTo(0)}>Restart Game</button>
+      </li>
+    );
 
     let status;
    if(winner){
@@ -126,26 +119,18 @@ class Game extends React.Component {
     }
    }
 
-   const isAscending = this.state.isAscending;
-   if (!isAscending) {
-     moves.reverse();
-   }
+ 
 
     return (
       <div className="game">
-        <div className="game-board">
+       <div className="game-status">{status}</div>
           <Board
             winnerData= {winner}
             squares={current.squares} 
             onClick={(i,iIndex,jIndex) => this.handleClick(i,iIndex,jIndex)}
           />
-
-        </div>
         <div className="game-info">
-          <div>{status}</div>
-          <button onClick={() => this.handleSortToggle()}>
-            {isAscending ? 'descending' : 'ascending'}
-          </button>
+          
           <ol>{moves}</ol>
         </div>
       </div>
