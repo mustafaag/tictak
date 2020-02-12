@@ -1,37 +1,33 @@
 import React, { Component } from 'react'
 import Board from './Board';
+import { connect } from 'react-redux';
+import { addX } from '../actions/gameactions';
 
-export default class Game extends Component {
+class Game extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-          history: [{
-            squares: Array(9).fill(null),
-          }],
-          xIsNext: true,
-          stepNumber: 0,
-          isAscending: true
-        };
       }
     
-      handleClick(i,iIndex,jIndex) {
-        
-        const history = this.state.history.slice(0, this.state.stepNumber+1);
+      addX(i,iIndex,jIndex) {        
+        const history = this.props.state.history.slice(0, this.props.state.stepNumber+1);
         const current = history[history.length - 1];
         const squares = current.squares.slice();
         const squareIndexes = '('+(iIndex+1)+','+(jIndex+1) +')';
         if (calculateWinner(squares).winner !== null) {
           return;
         }
-        squares[i] = this.state.xIsNext ? 'X' : 'O';
-        this.setState({
+        squares[i] = this.props.state.xIsNext ? 'X' : 'O';
+
+        
+        const  tempState = {
           history: history.concat([{
             squares: squares,
             squareIndexes: squareIndexes
           }]),
           stepNumber: history.length,
-          xIsNext: !this.state.xIsNext,
-        });
+          xIsNext: !this.props.state.xIsNext,
+        };
+        this.props.addX(tempState);
       }
     
       jumpTo(step) {
@@ -43,14 +39,14 @@ export default class Game extends Component {
     
       handleSortToggle() {
         this.setState({
-          isAscending: !this.state.isAscending
+          isAscending: !this.props.state.isAscending
         });
       }
     
       render() {
     
-        const history = this.state.history;
-        const current = history[this.state.stepNumber];
+        const history = this.props.state.history;
+        const current = history[this.props.state.stepNumber];
         const winner = calculateWinner(current.squares);
       
         const moves = (
@@ -64,7 +60,7 @@ export default class Game extends Component {
         if (winner.winner) {
           status = 'Winner: ' + winner.winnerSign;
         } else if(winner.winner === null) {
-          status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+          status = 'Next player: ' + (this.props.state.xIsNext ? 'X' : 'O');
         }else if(!winner.winner){
           status = 'It is a draw';
         }
@@ -78,7 +74,7 @@ export default class Game extends Component {
               <Board
                 winnerData= {winner}
                 squares={current.squares} 
-                onClick={(i,iIndex,jIndex) => this.handleClick(i,iIndex,jIndex)}
+                onClick={(i,iIndex,jIndex) => this.addX(i,iIndex,jIndex)}
               />
             <div className="game-info">
               
@@ -88,7 +84,22 @@ export default class Game extends Component {
         );
       }
 }
+const mapStateToProps = (state) => {
+  return {
+    state
+  }
+}
 
+const mapDispatchToProps = (dispatch) => {
+  return {
+      addX: (tempState)=> {
+          dispatch(addX(tempState));
+      }
+  }
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Game);
 function calculateWinner(squares) {
     let retvar = {
       winner: null
